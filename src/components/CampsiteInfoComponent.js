@@ -119,7 +119,7 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
                     <LocalForm onSubmit={values => this.handleSubmit(values)}>
                         <div className='form-group'>
                             Rating
-                            <Control.select model=".rating" id="rating" name="rating" className='form-control'>
+                            <Control.select model=".rating" name="rating" className='form-control'>
                                 <option>1</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -129,7 +129,7 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
                         </div>
                         <div className='form-group'>
                             Your Name
-                            <Control.text model=".author" id="author" name="author" className='form-control'
+                            <Control.text model=".author" name="author" className='form-control'
                             validators={{
                                 minLength: minLength(2),
                                 maxLength: maxLength(15)
@@ -148,7 +148,7 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
                         </div>
                         <div className='form-group'>    
                             Comment
-                            <Control.textarea model=".comment" id="comment" name="comment" className='form-control' rows='6' />
+                            <Control.textarea model=".comment" name="comment" className='form-control' rows='6' />
                        </div>
                        <Button type="submit" value="submit" color='primary'>Submit</Button>
                     </LocalForm>
