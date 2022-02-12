@@ -3,6 +3,8 @@ import { Card, CardImg, CardText, CardBody, Breadcrumb, BreadcrumbItem, Button, 
 import { Link } from 'react-router-dom';
 import { Component } from 'react/cjs/react.production.min';
 import { Control, LocalForm, Errors} from 'react-redux-form';
+import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 
 
@@ -13,7 +15,7 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
         return (
             <div className='col-md-5 m-1'>
                 <Card>
-                    <CardImg top src={campsite.image} alt={campsite.name} />
+                <CardImg top src={baseUrl + campsite.image} alt={campsite.name} />
                     <CardBody>
                         <CardText>{campsite.description}</CardText>
                     </CardBody>
@@ -24,13 +26,13 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
     }
 
 
-    function RenderComments({comments}) {
+    function RenderComments({comments, postComment, campsiteId}) {
         if (comments) {
             return (
                 <div className='col-md-5 m-1'>
                     <h4>Comments</h4>
                     {comments.map(comment => <div key={comment.id}> <div>{comment.text} <br></br>--{comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</div><br></br></div>)}
-                    <CommentForm />
+                    <CommentForm campsiteId={campsiteId} postComment={postComment} />
                 </div>
                 
             );
@@ -42,6 +44,26 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
     }
 
     function CampsiteInfo(props) {
+        if (props.isLoading) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        if (props.errMess) {
+            return (
+                <div className="container">
+                    <div className="row">
+                        <div className="col">
+                            <h4>{props.errMess}</h4>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
         if (props.campsite) {
             return (
                 <div className="container">
@@ -49,7 +71,7 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
                         <div className='row'>
                             <div className='col'>
                                 <Breadcrumb>
-                                <BreadcrumbItem><Link to="/home">Directory</Link></BreadcrumbItem>
+                                <BreadcrumbItem><Link to="/directory">Directory</Link></BreadcrumbItem>
                                 <BreadcrumbItem active>{props.campsite.name}</BreadcrumbItem>
                                 </Breadcrumb>
                                 <h2>{props.campsite.name}</h2>
@@ -59,7 +81,11 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
                 </div>
                     <div className="row">
                         <RenderCampsite campsite={props.campsite} />
-                        <RenderComments comments={props.comments} />
+                        <RenderComments
+                        comments={props.comments}
+                        postComment={props.postComment}
+                        campsiteId={props.campsite.id}
+                    />
                     </div>
                 </div>
             );
@@ -103,10 +129,8 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
         }
 
         handleSubmit(values) {
-            console.log('Current state is: ' + JSON.stringify(values));
-            alert('Current state is: ' + JSON.stringify(values));
             this.toggleModal();
-            values.preventDefault();
+            this.props.postComment(this.props.campsiteId, values.rating, values.author, values.text);
         }
         
 
@@ -120,6 +144,7 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
                         <div className='form-group'>
                             Rating
                             <Control.select model=".rating" name="rating" className='form-control'>
+                                <option>Select</option>
                                 <option>1</option>
                                 <option>2</option>
                                 <option>3</option>
@@ -148,7 +173,7 @@ import { Control, LocalForm, Errors} from 'react-redux-form';
                         </div>
                         <div className='form-group'>    
                             Comment
-                            <Control.textarea model=".comment" name="comment" className='form-control' rows='6' />
+                            <Control.textarea model=".text" id=".text" className='form-control' rows='6' />
                        </div>
                        <Button type="submit" value="submit" color='primary'>Submit</Button>
                     </LocalForm>
