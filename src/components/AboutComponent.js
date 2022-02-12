@@ -88,7 +88,7 @@ function PartnerList(props) {
 
     const partners = props.partners.partners.map(partner => {
         return (
-            <Fade>
+            <Fade in>
                 <Media tag="li" key={partner.id}>
                     <RenderPartner partner={partner} />
                 </Media>
@@ -120,7 +120,7 @@ function PartnerList(props) {
     return (
         <div className='col mt-4'>
             <Media list>
-                <Stagger>
+                <Stagger in>
                     {partners}
                 </Stagger>
             </Media>

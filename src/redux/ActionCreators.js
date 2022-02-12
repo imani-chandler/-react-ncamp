@@ -198,12 +198,21 @@ export const postFeedback = (feedback) => {
         .then(response => {
                 if (response.ok) {
                     return response;
+                } else {
+                    const error = new Error(`Error ${response.status}: ${response.statusText}`);
+                    error.response = response;
+                    throw error;
                 }
             },
+            error => { throw error; }
         )
         .then(response => response.json())
        
         .then(alert(`Thank you for your Feedback ${JSON.stringify(feedback)}`))
+        .catch(error => {
+            console.log('post feedback', error.message);
+            alert('Thank you for you feedback!');
+        })
     }
         
       

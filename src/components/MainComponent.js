@@ -67,6 +67,7 @@ class Main extends Component {
                     comments={this.props.comments.comments.filter(comment => comment.campsiteId === +match.params.campsiteId)}
                     commentsErrMess={this.props.comments.errMess}
                     postComment={this.props.postComment}
+                    postFeedback={this.props.postFeedback}
                 />
             );
         };    
@@ -93,5 +94,4 @@ class Main extends Component {
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
-
 
